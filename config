@@ -1,0 +1,169 @@
+; ---------------
+; Color variables
+; ---------------
+
+[colors]
+bg = #282828
+bg1 = #3c3836
+bg2 = #504945
+bg3 = #665c54
+
+fg = #EBDBB2
+fg2 = #d5c4a1
+fg3 = #bdae93
+
+accent = #B03934
+base = #98971A
+
+; -------
+; Top bar
+; -------
+
+[bar/mybar]
+modules-left = bspwm  
+modules-center = date 
+modules-right = pulseaudio 
+
+font-0 = "JetBrainsMono NF:pixelsize=12;3"
+font-1 = "JetBrainsMono NF:pixelsize=12;3"
+font-2 = "JetBrainsMono NF:pixelsize=18;5"
+
+background = ${colors.bg}
+foreground = ${colors.fg}
+
+height = 28 
+padding-right = 2 
+
+
+; -----------
+; Bottom bar
+; -----------
+[bar/bottombar]
+modules-right = temperature1 memory cpu battery 
+modules-left = email slack chrome 
+font-0 = "JetBrainsMono NF:pixelsize=12;3"
+font-1 = "JetBrainsMono NF:pixelsize=18;5"
+
+background = ${colors.bg}
+foreground = ${colors.fg}
+
+height = 28 
+bottom = true
+
+
+; ---------
+; Modules
+; ---------
+
+[module/cpu]
+type = internal/cpu
+interval = 5
+warn-peccrcentage = 95
+label = %{T2}%{T-} %percentage%%
+label-padding = 1
+label-background = ${colors.bg2}
+
+[module/memory]
+type = internal/memory
+interval = 16
+warn-percentage = 95
+label = %{T2}%{T-} %percentage_used%%
+label-padding = 1 
+label-background = ${colors.bg1}
+
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 90
+
+format-full-padding = 1
+label-full = %percentage%%
+format-full = %{T2}%{T-}
+format-full-background = ${colors.bg3}
+
+label-charging = %percentage%% 
+format-charging = %{T2}%{T-} <label-charging>
+format-charging-background = ${colors.bg3}
+format-charging-padding = 1
+
+label-discharging = %percentage%% 
+format-discharging = %{T2}%{T-} <label-discharging>
+format-discharging-padding = 1
+format-discharging-background = ${colors.bg3}
+
+[module/temperature1]
+type = internal/temperature
+interval = 20
+thermal-zone = 0 
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input
+base-temperature = 20
+warn-temperature = 60
+label-padding = 1
+
+
+[module/date]
+type = internal/date
+date = %d %b %H:%M
+intval = 3600
+label-font = 2
+label-background = ${colors.bg1}
+label-padding = 1
+
+[module/bspwm]
+type = internal/bspwm
+
+
+label-focused = %name%
+label-focused-font = 2
+label-focused-background = ${colors.fg}
+label-focused-foreground = ${colors.bg}
+label-focused-padding = 1
+
+label-occupied = %name%
+label-occupied-font = 2
+label-occupied-padding = 1
+
+label-urgent = %name%!
+label-urgent-font = 2
+label-urgent-background = ${colors.accent}
+label-urgent-padding = 1
+
+label-empty = %name%
+label-empty-font = 2
+label-empty-foreground = ${colors.bg2}
+label-empty-padding = 1
+
+[module/pulseaudio]
+type = internal/pulseaudio
+use-ui-max = false
+interval = 5
+label-volume = %{T3}%{T-} %percentage%%
+label-muted = %{T3}婢%{T-}
+click-right = pavucontrol
+
+[module/slack]
+type = custom/text
+content-padding = 1
+content = %{T2}%{T-}
+click-left = slack
+content-foreground = ${colors.fg}
+content-background = ${colors.bg2}
+
+[module/chrome]
+type = custom/text
+content-padding = 1
+content = %{T2}%{T-}
+click-left = google-chrome 
+content-foreground = ${colors.fg}
+content-background = ${colors.bg1}
+
+[module/email]
+type = custom/text
+content-padding = 1
+content = %{T2}%{T-}
+click-left = thunderbird 
+content-foreground = ${colors.fg}
+content-background = ${colors.bg3}
+
