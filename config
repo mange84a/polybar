@@ -114,7 +114,6 @@ label-padding = 1
 [module/bspwm]
 type = internal/bspwm
 
-
 label-focused = %name%
 label-focused-font = 2
 label-focused-background = ${colors.fg}
@@ -141,7 +140,7 @@ use-ui-max = false
 interval = 5
 label-volume = %{T3}%{T-} %percentage%%
 label-muted = %{T3}婢%{T-}
-click-right = pavucontrol
+click-right = alacritty -e pulsemixer
 
 [module/slack]
 type = custom/text
