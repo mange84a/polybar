@@ -3,74 +3,109 @@
 ; ---------------
 
 [colors]
-bg = #282828
-bg1 = #3c3836
-bg2 = #504945
-bg3 = #665c54
-
-fg = #EBDBB2
-fg2 = #d5c4a1
-fg3 = #bdae93
-
-accent = #B03934
-base = #98971A
+transparent = #00000000
+white = #FFFFFF
+orange = #FAB387
+offwhite = #A6ADC8
+blue = #04a5e5
+red = #F38BA8
+black = #000
+green = #a6d189
+yellow = #f9e2af
 
 ; -------
-; Top bar
+; Top bar internal
 ; -------
 
-[bar/mybar]
+[bar/top_internal_bar]
+monitor = eDP-1
 modules-left = bspwm  
-modules-center = date 
-modules-right = pulseaudio 
+modules-right = gh-issues pulseaudio battery date
 
-font-0 = "JetBrainsMono NF:pixelsize=12;3"
-font-1 = "JetBrainsMono NF:pixelsize=12;3"
-font-2 = "JetBrainsMono NF:pixelsize=18;5"
+font-0 = "JetBrainsMono NF:pixelsize=11;3"
+font-1 = "JetBrainsMono NF:pixelsize=18;5"
 
-background = ${colors.bg}
-foreground = ${colors.fg}
+background = ${colors.transparent}
+foreground = ${colors.black}
 
 height = 28 
-padding-right = 2 
+offset-y = 10
+width = 99%
+offset-x = 0.5%
+margin-left = 10
+padding-right = 0 
+module-margin-left = 1
+; -------
+; Top bar external
+; -------
 
+[bar/top_external_bar]
+monitor = DP-2
+modules-left = bspwm  
+modules-right =  gh-issues pulseaudio battery date
 
-; -----------
-; Bottom bar
-; -----------
-[bar/bottombar]
-modules-right = temperature1 memory cpu battery 
-modules-left = email slack chrome 
 font-0 = "JetBrainsMono NF:pixelsize=12;3"
 font-1 = "JetBrainsMono NF:pixelsize=18;5"
 
-background = ${colors.bg}
-foreground = ${colors.fg}
+background = ${colors.transparent}
+foreground = ${colors.black}
 
 height = 28 
-bottom = true
-
+offset-y = 10
+width = 99%
+offset-x = 0.5%
+margin-left = 10
+padding-right = 0
+module-margin-left = 1
 
 ; ---------
 ; Modules
 ; ---------
+[module/gh-issues]
+type = custom/script
+exec = /home/monk/ghissues.sh
+interval = 90
+label-padding = 0
+label-background = ${colors.white}
+label = %{T2}%{B#FAB387}  %{T- B-}%{B#FFF} %output% %{B-}
+click-left = alacritty --hold -e gh search issues --assignee=@me --state=open
 
-[module/cpu]
-type = internal/cpu
-interval = 5
-warn-peccrcentage = 95
-label = %{T2}%{T-} %percentage%%
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %{T2}%{T-} %name%
+label-focused-font = 1
+label-focused-padding-right = 2
+label-focused-foreground = ${colors.white}
+
+label-occupied = %{T2}%{T-} %name%
+label-occupied-font = 1
+label-occupied-padding-right = 2
+label-occupied-foreground = ${colors.white}
+
+label-urgent = %{T2}%{T-} %name%!
+label-urgent-font = 1
+label-urgent-padding-right = 2
+label-urgent-foreground = ${colors.red}
+
+label-empty = %{T2}%{T-} %name%
+label-empty-font = 1
+label-empty-padding-right = 2
+label-empty-foreground = ${colors.offwhite}
+
+[module/date]
+type = internal/date
+date = %d %b %H:%M
+intval = 3600
+
+format =  <label>
+format-background = ${colors.yellow}
+format-padding = 1
+format-font = 2
+
+label-background = ${colors.white}
 label-padding = 1
-label-background = ${colors.bg2}
-
-[module/memory]
-type = internal/memory
-interval = 16
-warn-percentage = 95
-label = %{T2}%{T-} %percentage_used%%
-label-padding = 1 
-label-background = ${colors.bg1}
-
+label-font = 1
 
 [module/battery]
 type = internal/battery
@@ -78,91 +113,52 @@ battery = BAT0
 adapter = AC
 full-at = 90
 
-format-full-padding = 1
-label-full = %percentage%%
-format-full = %{T2}%{T-}
-format-full-background = ${colors.bg3}
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-font = 2
+ramp-capacity-padding = 1
+ramp-capacity-background = ${colors.green}
 
-label-charging = %percentage%% 
-format-charging = %{T2}%{T-} <label-charging>
-format-charging-background = ${colors.bg3}
-format-charging-padding = 1
+format-full = <ramp-capacity><label-full>
+label-full-background = ${colors.white}
+label-full-padding = 1
 
-label-discharging = %percentage%% 
-format-discharging = %{T2}%{T-} <label-discharging>
-format-discharging-padding = 1
-format-discharging-background = ${colors.bg3}
+format-charging = <ramp-capacity><label-charging>
+label-charging-background = ${colors.white}
 
-[module/temperature1]
-type = internal/temperature
-interval = 20
-thermal-zone = 0 
-hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input
-base-temperature = 20
-warn-temperature = 60
-label-padding = 1
+format-discharging = <ramp-capacity><label-discharging>
+label-discharging-background = ${colors.white}
 
+format-low = <ramp-capacity><label-discharging>
+label-low-background = ${colors.red}
+label-low-forground = ${colors.white}
 
-[module/date]
-type = internal/date
-date = %d %b %H:%M
-intval = 3600
-label-font = 2
-label-background = ${colors.bg1}
-label-padding = 1
-
-[module/bspwm]
-type = internal/bspwm
-
-label-focused = %name%
-label-focused-font = 2
-label-focused-background = ${colors.fg}
-label-focused-foreground = ${colors.bg}
-label-focused-padding = 1
-
-label-occupied = %name%
-label-occupied-font = 2
-label-occupied-padding = 1
-
-label-urgent = %name%!
-label-urgent-font = 2
-label-urgent-background = ${colors.accent}
-label-urgent-padding = 1
-
-label-empty = %name%
-label-empty-font = 2
-label-empty-foreground = ${colors.bg2}
-label-empty-padding = 1
+;Puleseaudio module
 
 [module/pulseaudio]
 type = internal/pulseaudio
-use-ui-max = false
+use-ui-max = true
 interval = 5
-label-volume = %{T3}%{T-} %percentage%%
-label-muted = %{T3}婢%{T-}
+format-volume = <ramp-volume><label-volume>
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-background = ${colors.blue}
+ramp-volume-padding = 1
+ramp-volume-font = 2
+
+label-volume-font = 1
+label-volume = %percentage%%
+label-volume-background = ${colors.white}
+label-volume-padding = 1
+
+label-muted-background = ${colors.blue}
+label-muted = 婢
+label-muted-font = 2
+label-muted-padding = 1
 click-right = alacritty -e pulsemixer
-
-[module/slack]
-type = custom/text
-content-padding = 1
-content = %{T2}%{T-}
-click-left = slack
-content-foreground = ${colors.fg}
-content-background = ${colors.bg2}
-
-[module/chrome]
-type = custom/text
-content-padding = 1
-content = %{T2}%{T-}
-click-left = google-chrome 
-content-foreground = ${colors.fg}
-content-background = ${colors.bg1}
-
-[module/email]
-type = custom/text
-content-padding = 1
-content = %{T2}%{T-}
-click-left = thunderbird 
-content-foreground = ${colors.fg}
-content-background = ${colors.bg3}
 

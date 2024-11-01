@@ -4,19 +4,14 @@
 killall -q polybar
 # If all your bars have ipc enabled, you can also use
 # polybar-msg cmd quit
+# Wait until the processes have been shut down
+while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
-# Launch Polybar, using default config location ~/.config/polybar/config.ini
+polybar -r top_internal_bar &
 
-polybar -r mybar 2>&1 | tee -a /tmp/polybar.log & disown
-polybar -r bottombar 2>&1 | tee -a /tmp/polybar_btm.log & disown
-
-
-if type "xrandr"; then
-  for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-    MONITOR=$m polybar --reload mybar &
-  done
-else
-  polybar --reload mybar &
+my_external_monitor=$(xrandr --query | grep 'DP-2')
+if [[ $my_external_monitor = *connected* ]]; then
+    polybar -r top_external_bar &
 fi
 
 echo "Polybar launched..."
